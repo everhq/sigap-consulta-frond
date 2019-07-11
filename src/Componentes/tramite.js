@@ -19,6 +19,7 @@ class Tramite extends React.Component {
         valorTipo:'',
         apt:'',
         idprograma:8,
+        selectedOption: '',
       }
       this.guardar=this.guardar.bind(this)
       this.handleChangeTipoTramite=this.handleChangeTipoTramite.bind(this)
@@ -68,12 +69,23 @@ class Tramite extends React.Component {
         }).then((datos)=>{
 
                 //console.log("xdddid222"+datos[lista].id_abp)                
-                document.getElementById("cod_alumno").value=datos[lista].cod_alumno;
-                document.getElementById("id_programa").value=datos[lista].id_programa;
+                
+                
                 document.getElementById("id_tipotramite").value=datos[lista].id_tipotramite;
+                document.getElementById("n_tramite").value=datos[lista].n_tramite;
                 document.getElementById("id_apb").value=datos[lista].id_apb;
+                document.getElementById("anio_tramite").value=datos[lista].anio_tramite;
+                document.getElementById("usuario_emision").value=datos[lista].usuario_emision;
+                document.getElementById("fecha_emision").value=datos[lista].fecha_emision;
+                document.getElementById("n_oficio").value=datos[lista].n_oficio;
+                document.getElementById("fecha_oficio").value=datos[lista].fecha_oficio;
+                document.getElementById("anio_oficio").value=datos[lista].anio_oficio;
                 document.getElementById("n_expediente").value=datos[lista].n_expediente;
                 document.getElementById("fecha_expediente").value=datos[lista].fecha_expediente;
+                document.getElementById("importe_oficio").value=datos[lista].importe_oficio;
+                document.getElementById("importe_matricula_epg").value=datos[lista].importe_matricula_epg;
+                document.getElementById("importe_otros").value=datos[lista].importe_otros;
+                document.getElementById("importe_total").value=datos[lista].importe_total;
                 
                 this.setState({
                     OpcionTramite:{value:datos[lista].desc_tipotramite,label:datos[lista].desc_tipotramite},
@@ -81,7 +93,7 @@ class Tramite extends React.Component {
                     valorTipo:this.leertipo(datos[lista].desc_tipotramite),
                     
                     apt:datos[lista].id_apt,
-                    idprograma:datos[lista].id_programa
+                    //idprograma:datos[lista].id_programa
                 })
                 console.log("xdddid-componentDidMount"+datos[lista].id_apt)
 
@@ -114,8 +126,7 @@ class Tramite extends React.Component {
         }else swal("Escoja un beneficio","","warning")
     }
     habilitar(){
-        document.getElementById("cod_alumno").disabled=false;
-        document.getElementById("id_programa").disabled=false;
+        
         document.getElementById("fecha_expediente").disabled=false;
         document.getElementById("n_expediente").disabled=false;
 
@@ -133,17 +144,27 @@ class Tramite extends React.Component {
     
     guardar(){
 
-        var cod_alumno=document.getElementById("cod_alumno").value;
-        var id_programa=document.getElementById("id_programa").value;
+        
+        var n_tramite=document.getElementById("n_tramite").value;
         var id_tipotramite=document.getElementById("id_tipotramite").value;
         var id_apb=document.getElementById("id_apb").value;
+        var anio_tramite=document.getElementById("anio_tramite").value;
+        var usuario_emision=document.getElementById("usuario_emision").value;
+        var fecha_emision=document.getElementById("fecha_emision").value.replace(/^(\d{2})[-\/](\d{2})[-\/](\d{4})$/g,'$3-$2-$1');
+        var n_oficio=document.getElementById("n_oficio").value;
+        var fecha_oficio=document.getElementById("fecha_oficio").value.replace(/^(\d{2})[-\/](\d{2})[-\/](\d{4})$/g,'$3-$2-$1');        
+        var anio_oficio=document.getElementById("anio_oficio").value;
         var n_expediente=document.getElementById("n_expediente").value;
         var fecha_expediente=document.getElementById("fecha_expediente").value.replace(/^(\d{2})[-\/](\d{2})[-\/](\d{4})$/g,'$3-$2-$1');
-    
+        var importe_oficio=document.getElementById("importe_oficio").value;
+        var importe_matricula_epg=document.getElementById("importe_matricula_epg").value;
+        var importe_otros=document.getElementById("importe_otros").value;
+        var importe_total=document.getElementById("importe_total").value;
+        
 
         console.log("xdddd  "+this.state.lista);
-        console.log("cod_alumno : "+cod_alumno);
-        console.log( "id_programa"+ id_programa);
+        //console.log("cod_alumno : "+cod_alumno);
+        
         console.log("id_tipotramite "+id_tipotramite);
         console.log("id_apb "+id_apb);
         console.log("n_expediente "+n_expediente);
@@ -163,12 +184,22 @@ class Tramite extends React.Component {
                 method: "POST",
                     body: JSON.stringify(
                     {
-                        "cod_alumno":cod_alumno,
-                        "id_programa": id_programa,
+                        "cod_alumno":this.state.codigo2,
                         "id_tipotramite":this.state.valorTipo,
+                        "n_tramite":n_tramite,
+                        "anio_tramite": anio_tramite,
+                        "usuario_emision": usuario_emision,
+                        "fecha_emision": fecha_emision,
+                        "n_oficio":n_oficio,
+                        "fecha_oficio": fecha_oficio,
+                        "anio_oficio": anio_oficio,
                         "id_apb":id_apb,
                         "n_expediente":n_expediente,
                         "fecha_expediente":fecha_expediente,
+                        "importe_oficio":importe_oficio,
+                        "importe_matricula_epg": importe_matricula_epg,
+                        "importe_otros": importe_otros,
+                        "importe_total": importe_total,
                         "id_apt":this.state.apt,
                     }
 
@@ -204,12 +235,22 @@ class Tramite extends React.Component {
                 method: "POST",
                     body: JSON.stringify(
                     {
-                        "cod_alumno":cod_alumno,
-                        "id_programa": id_programa,
+                        "cod_alumno":this.state.codigo2,
                         "id_tipotramite":this.state.valorTipo,
+                        "n_tramite":n_tramite,
+                        "anio_tramite": anio_tramite,
+                        "usuario_emision": usuario_emision,
+                        "fecha_emision": fecha_emision,
+                        "n_oficio":n_oficio,
+                        "fecha_oficio": fecha_oficio,
+                        "anio_oficio": anio_oficio,
                         "id_apb":id_apb,
                         "n_expediente":n_expediente,
                         "fecha_expediente":fecha_expediente,
+                        "importe_oficio":importe_oficio,
+                        "importe_matricula_epg": importe_matricula_epg,
+                        "importe_otros": importe_otros,
+                        "importe_total": importe_total,
                         
                     }
 
@@ -247,7 +288,14 @@ class Tramite extends React.Component {
       console.log('MIRAA'+this.state.codigo)
       e.preventDefault();
   }
+
+  handleChange = (selectedOption) => {
+    this.setState({ selectedOption });
+    console.log(`Selected: ${selectedOption.label}`);
+  }
     render() {
+        const { selectedOption } = this.state;
+  	const value = selectedOption && selectedOption.value;
         return (
           <div>
                 <div >
@@ -280,32 +328,51 @@ class Tramite extends React.Component {
                     <div className="row sombra">    
                         <div className="col-md-3"><h6 >Digitalizado:</h6></div>
                         <div className="col-md-9 ">
-                        <Select>
-                        <option value="A" selected="1">"Si"</option>
-                        <option value="B">"No"</option>
-                        </Select>
+                        <Select 
+                        value={value}
+                        onChange={this.handleChange}
+                        options={[
+                          { value: 'one', label: 'SI' },
+                          { value: 'two', label: 'NO' },
+                        ]}
+                        />
                         </div>
                     </div>
                     <div className="row sombra">
-                        <div className="col-md-3"><h6 >Codigo Alumno:</h6></div>
-                        <div className="col-md-9"><input className="estilo" type="text" id="cod_alumno" /></div>
+                        <div className="col-md-3"><h6 >Número:</h6></div>
+                        <div className="col-md-9"><input className="estilo" type="text" id="n_tramite" /></div>
                         </div>
 
                     <div className="row sombra">
-                        <div className="col-md-3"><h6 >ID Programa:</h6></div>
-                        <div className="col-md-9 "><input className="estilo" type="number" id="id_programa" /></div>
+                        <div className="col-md-3"><h6 >Año:</h6></div>
+                        <div className="col-md-9 "><input className="estilo" type="text" id="anio_tramite" /></div>
                         </div>
 
                     <div className="row sombra">
-                        <div className="col-md-3"><h6 >ID tipo tramite:</h6></div>
-                        <div className="col-md-9 "><input  className="estilo" type="number" id="id_tipotramite" disabled/></div>
+                        <div className="col-md-3"><h6 >Usuario:</h6></div>
+                        <div className="col-md-9"><input className="estilo" type="text" id="usuario_emision" /></div>
+                        </div>
+                    
+                    <div className="row sombra">
+                        <div className="col-md-3"><h6 >Fecha:</h6></div>
+                        <div className="col-md-9 "><input  className="estilo" type="date" id="fecha_emision" /></div>
                     </div>
 
                     <div className="row sombra">
-                        <div className="col-md-3"><h6 >ID APB:</h6></div>
-                        <div className="col-md-9 "><input className="estilo" type="number" id="id_apb" /></div>
+                        <div className="col-md-3"><h6 >N° Oficio:</h6></div>
+                        <div className="col-md-9 "><input className="estilo" type="text" id="n_oficio" /></div>
                         </div>
+                        
+                    <div className="row sombra">
+                        <div className="col-md-3"><h6 >Fecha Oficio:</h6></div>
+                        <div className="col-md-9 "><input  className="estilo" type="date" id="fecha_oficio" /></div>
+                    </div>
 
+                    <div className="row sombra">
+                        <div className="col-md-3"><h6 >Año Oficio:</h6></div>
+                        <div className="col-md-9 "><input className="estilo" type="text" id="anio_oficio" /></div>
+                        </div>
+                    
                     <div className="row sombra">
                         <div className="col-md-3"><h6 >N° Expediente:</h6></div>
                         <div className="col-md-9"><input className="estilo" type="text" id="n_expediente" /></div>
@@ -316,6 +383,37 @@ class Tramite extends React.Component {
                         <div className="col-md-9"><input className="estilo" type="date" id="fecha_expediente" /></div>
                     </div>
 
+                    <div className="row sombra">
+                        <div className="col-md-3"><h6 >Beneficio (id_apb=7):</h6></div>
+                        <div className="col-md-9"><input className="estilo" type="number" id="id_apb" /></div>
+                    </div>
+
+                    <div className="row sombra">
+                        <div className="col-md-3"><h6 >Importe a pagar:</h6></div>
+                        <div className="col-md-9"><input className="estilo" type="number" id="importe_oficio" /></div>
+                    </div>
+
+                    <div className="row sombra">
+                        <div className="col-md-3"><h6 >EPG:</h6></div>
+                        <div className="col-md-9"><input className="estilo" type="number" id="importe_matricula_epg" /></div>
+                    </div>
+
+                    <div className="row sombra">
+                        <div className="col-md-3"><h6 >Otros pagos:</h6></div>
+                        <div className="col-md-9"><input className="estilo" type="number" id="importe_otros" /></div>
+                    </div>
+
+                    <div className="row sombra">
+                        <div className="col-md-3"><h6 >Pago total:</h6></div>
+                        <div className="col-md-9"><input className="estilo" type="number" id="importe_total"/></div>
+                    </div>
+
+                    <div className="row sombra">
+                        <div className="col-md-3"><h6 >ID tipo tramite:</h6></div>
+                        <div className="col-md-9 "><input  className="estilo" type="number" id="id_tipotramite" disabled/></div>
+                    </div>
+
+                   
                     <div className="row">
 
                             <div className=" col-md-6">
@@ -328,102 +426,7 @@ class Tramite extends React.Component {
 
                     </div>
 
-{/*
 
-    <div className="container" >
-
-    <div className="row ">
-        <div className="col-md-12"><h4 >Datos del Trámite</h4></div>
-    </div>
-
-    
-    <div className="row sombra">
-        <div className="col-md-3"><h6 >Trámite:</h6></div>
-        <div className="col-md-9 ">
-        <Select
-            value={this.state.OpcionTramite}
-            options={this.state.tipo}
-            onChange={this.handleChangeTipoTramite}
-
-            />
-        </div>
-    </div>
-    <div className="row sombra">    
-        <div className="col-md-3"><h6 >Digitalizado:</h6></div>
-        <div className="col-md-9 ">
-          <Select>
-          <option value="A" selected="1">"Si"</option>
-          <option value="B">"No"</option>
-          </Select>
-        </div>
-    </div>
-    <div className="row sombra">
-        <div className="col-md-3"><h6 >Número:</h6></div>
-        <div className="col-md-9"><input className="estilo" type="text" id="numero" /></div>
-        </div>
-
-    <div className="row sombra">
-        <div className="col-md-3"><h6 >Año:</h6></div>
-        <div className="col-md-9 "><input className="estilo" type="text" id="año" /></div>
-        </div>
-    
-    <div className="row sombra">
-        <div className="col-md-3"><h6 >Fecha:</h6></div>
-          <div className="col-md-9 "><input  className="estilo" type="date" id="fecha" /></div>
-    </div>
-
-    <div className="row sombra">
-        <div className="col-md-3"><h6 >N° Oficio:</h6></div>
-        <div className="col-md-9 "><input className="estilo" type="text" id="n_oficio" /></div>
-        </div>
-        
-    <div className="row sombra">
-        <div className="col-md-3"><h6 >Fecha Oficio:</h6></div>
-        <div className="col-md-9 "><input  className="estilo" type="date" id="fecha_oficio" /></div>
-    </div>
-    
-    <div className="row sombra">
-        <div className="col-md-3"><h6 >N° Expediente:</h6></div>
-        <div className="col-md-9"><input className="estilo" type="text" id="n_expediente" /></div>
-    </div>
-
-    <div className="row sombra">
-        <div className="col-md-3"><h6 >Importe a pagar:</h6></div>
-        <div className="col-md-9"><input className="estilo" type="text" id="importe_pagar" /></div>
-    </div>
-
-    <div className="row sombra">
-        <div className="col-md-3"><h6 >EPG:</h6></div>
-        <div className="col-md-9"><input className="estilo" type="text" id="epg" /></div>
-    </div>
-
-    <div className="row sombra">
-        <div className="col-md-3"><h6 >Otros pagos:</h6></div>
-        <div className="col-md-9"><input className="estilo" type="text" id="otros_pagos" /></div>
-    </div>
-
-    <div className="row sombra">
-        <div className="col-md-3"><h6 >Pago total:</h6></div>
-        <div className="col-md-9"><input className="estilo" type="text" id="pago_total" placeholder="" disabled/></div>
-    </div>
-
-    <div className="row sombra">
-        <div className="col-md-3"><h6 >Costo del Programa:</h6></div>
-        <div className="col-md-9"><input className="estilo" type="text" id="costo_programa" /></div>
-    </div>
-    
-    <div className="row">
-
-            <div className=" col-md-6">
-                <button  onClick={this.guardar} className="  waves-effect waves-light btn-large botonazul2  " type="submit">Guardar<i className=" material-icons left">save</i></button>
-            </div>
-
-
-    </div>
-
-
-    </div>*/
-}
                
                         
                 </div>
