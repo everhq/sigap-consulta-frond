@@ -13,16 +13,21 @@ class Tramite extends React.Component {
         codigo:this.props.params.name,
         id:this.props.params.name,
         tipo:[],
+        tipoB:[],
         lista:[],
         listas:[],
+        listasB:[],
         OpcionTramite:null,
+        OpcionBeneficio:null,
         valorTipo:'',
+        valorTipoB:'',
         apt:'',
         idprograma:8,
         selectedOption: '',
       }
       this.guardar=this.guardar.bind(this)
       this.handleChangeTipoTramite=this.handleChangeTipoTramite.bind(this)
+      this.handleChangeBeneficio=this.handleChangeBeneficio.bind(this)
     }
     
     componentWillMount(){
@@ -44,6 +49,30 @@ class Tramite extends React.Component {
             this.setState({
                 tipo:array,
                 listas:listas
+            });
+        })
+        .catch(error=>{
+            console.error(error)
+        });
+        var array=this.state.id.split("&",2)
+        var  codigo=parseInt(array[0])
+        fetch(CONFIG+'/beneficio/listar/' +codigo)
+        .then((response)=>{
+            return response.json()
+        }).then((listasb)=>{
+            console.log("listasb--->"+codigo);
+            console.log(listasb);
+            var array=[];
+
+            for(var i=0;i<listasb.length;i++){
+                var e={value:listasb[i].benef_otrogado,label:listasb[i].benef_otrogado}
+                array.push(e);
+
+            }
+
+            this.setState({
+                tipoB:array,
+                listasB:listasb
             });
         })
         .catch(error=>{
@@ -71,9 +100,9 @@ class Tramite extends React.Component {
                 //console.log("xdddid222"+datos[lista].id_abp)                
                 
                 
-                document.getElementById("id_tipotramite").value=datos[lista].id_tipotramite;
+                //document.getElementById("id_tipotramite").value=datos[lista].id_tipotramite;
                 document.getElementById("n_tramite").value=datos[lista].n_tramite;
-                document.getElementById("id_apb").value=datos[lista].id_apb;
+                //document.getElementById("id_apb").value=datos[lista].id_apb;
                 document.getElementById("anio_tramite").value=datos[lista].anio_tramite;
                 document.getElementById("usuario_emision").value=datos[lista].usuario_emision;
                 document.getElementById("fecha_emision").value=datos[lista].fecha_emision;
@@ -89,8 +118,9 @@ class Tramite extends React.Component {
                 
                 this.setState({
                     OpcionTramite:{value:datos[lista].desc_tipotramite,label:datos[lista].desc_tipotramite},
-                    
+                    OpcionBeneficio:{value:datos[lista].beneficio_otorgado,label:datos[lista].beneficio_otorgado},
                     valorTipo:this.leertipo(datos[lista].desc_tipotramite),
+                    valorTipoB:this.leertipoB(datos[lista].beneficio_otorgado),
                     
                     apt:datos[lista].id_apt,
                     //idprograma:datos[lista].id_programa
@@ -112,12 +142,32 @@ class Tramite extends React.Component {
         console.log("Opcion elegida : ",Opcion);
         for(let i=0;i<this.state.listas.length;i++){
             if(this.state.listas[i].desc_tipotramite==Opcion.value){
-                document.getElementById("id_tipotramite").value=this.state.listas[i].id_tipotramite;
+                //document.getElementById("id_tipotramite").value=this.state.listas[i].id_tipotramite;
             }
             console.log('---->'+this.state.listas[i].desc_tipotramite+'=='+Opcion.value);
         }
             this.setState({OpcionTramite:Opcion,
             valorTipo:this.leertipo(Opcion.value),
+        });
+
+        console.log("xd--")
+        
+
+        }else swal("Escoja un beneficio","","warning")
+    }
+
+    handleChangeBeneficio=(Opcion)=>{
+        if(Opcion!=null){
+
+        console.log("Opcion elegida B : ",Opcion);
+        for(let i=0;i<this.state.listasB.length;i++){
+            if(this.state.listasB[i].benef_otrogado==Opcion.value){
+                //document.getElementById("id_apb").value=this.state.listasB[i].id_apb;
+            }
+            console.log('---->'+this.state.listasB[i].benef_otrogado+'=='+Opcion.value);
+        }
+            this.setState({OpcionBeneficio:Opcion,
+            valorTipoB:this.leertipoB(Opcion.value),
         });
 
         console.log("xd--")
@@ -141,13 +191,23 @@ class Tramite extends React.Component {
         }
         return id_tipo + 1;
     }
+
+    leertipoB(valor){
+        let id_tipo='';
+        for(let i=0; i<this.state.listasB.length;i++){
+            if(valor==this.state.listasB[i].benef_otrogado){
+                 id_tipo=i;
+            }
+        }
+        return id_tipo + 1;
+    }
     
     guardar(){
 
         
         var n_tramite=document.getElementById("n_tramite").value;
-        var id_tipotramite=document.getElementById("id_tipotramite").value;
-        var id_apb=document.getElementById("id_apb").value;
+        //var id_tipotramite=document.getElementById("id_tipotramite").value;
+        //var id_apb=document.getElementById("id_apb").value;
         var anio_tramite=document.getElementById("anio_tramite").value;
         var usuario_emision=document.getElementById("usuario_emision").value;
         var fecha_emision=document.getElementById("fecha_emision").value.replace(/^(\d{2})[-\/](\d{2})[-\/](\d{4})$/g,'$3-$2-$1');
@@ -165,13 +225,13 @@ class Tramite extends React.Component {
         console.log("xdddd  "+this.state.lista);
         //console.log("cod_alumno : "+cod_alumno);
         
-        console.log("id_tipotramite "+id_tipotramite);
-        console.log("id_apb "+id_apb);
+        //console.log("id_tipotramite "+id_tipotramite);
+        //console.log("id_apb "+id_apb);
         console.log("n_expediente "+n_expediente);
         console.log("fecha_expediente : "+fecha_expediente);
 
 
-        if(this.state.valorTipo!="" && fecha_expediente!=""){
+        if(this.state.valorTipo!="" /*&& fecha_expediente!=""*/){
          console.log("la lista fake de sator "+this.state.lista)
         
          if(this.state.apt >= 0){
@@ -193,7 +253,7 @@ class Tramite extends React.Component {
                         "n_oficio":n_oficio,
                         "fecha_oficio": fecha_oficio,
                         "anio_oficio": anio_oficio,
-                        "id_apb":id_apb,
+                        "id_apb":this.state.valorTipoB,
                         "n_expediente":n_expediente,
                         "fecha_expediente":fecha_expediente,
                         "importe_oficio":importe_oficio,
@@ -244,7 +304,7 @@ class Tramite extends React.Component {
                         "n_oficio":n_oficio,
                         "fecha_oficio": fecha_oficio,
                         "anio_oficio": anio_oficio,
-                        "id_apb":id_apb,
+                        "id_apb":this.state.valorTipoB,
                         "n_expediente":n_expediente,
                         "fecha_expediente":fecha_expediente,
                         "importe_oficio":importe_oficio,
@@ -384,34 +444,38 @@ class Tramite extends React.Component {
                     </div>
 
                     <div className="row sombra">
-                        <div className="col-md-3"><h6 >Beneficio (id_apb=7):</h6></div>
-                        <div className="col-md-9"><input className="estilo" type="number" id="id_apb" /></div>
+                        <div className="col-md-3"><h6 >Beneficio %:</h6></div>
+                        <div className="col-md-9 ">
+                        <Select
+                            value={this.state.OpcionBeneficio}
+                            options={this.state.tipoB}
+                            onChange={this.handleChangeBeneficio}
+
+                            />
+                        </div>
                     </div>
 
                     <div className="row sombra">
-                        <div className="col-md-3"><h6 >Importe a pagar:</h6></div>
+                        <div className="col-md-3"><h6 >Importe a pagar S/:</h6></div>
                         <div className="col-md-9"><input className="estilo" type="number" id="importe_oficio" /></div>
                     </div>
 
                     <div className="row sombra">
-                        <div className="col-md-3"><h6 >EPG:</h6></div>
+                        <div className="col-md-3"><h6 >EPG S/:</h6></div>
                         <div className="col-md-9"><input className="estilo" type="number" id="importe_matricula_epg" /></div>
                     </div>
 
                     <div className="row sombra">
-                        <div className="col-md-3"><h6 >Otros pagos:</h6></div>
+                        <div className="col-md-3"><h6 >Otros pagos S/:</h6></div>
                         <div className="col-md-9"><input className="estilo" type="number" id="importe_otros" /></div>
                     </div>
 
                     <div className="row sombra">
-                        <div className="col-md-3"><h6 >Pago total:</h6></div>
+                        <div className="col-md-3"><h6 >Pago total S/:</h6></div>
                         <div className="col-md-9"><input className="estilo" type="number" id="importe_total"/></div>
                     </div>
 
-                    <div className="row sombra">
-                        <div className="col-md-3"><h6 >ID tipo tramite:</h6></div>
-                        <div className="col-md-9 "><input  className="estilo" type="number" id="id_tipotramite" disabled/></div>
-                    </div>
+                    
 
                    
                     <div className="row">
